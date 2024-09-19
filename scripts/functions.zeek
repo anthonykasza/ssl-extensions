@@ -208,9 +208,7 @@ function parse_ssl_extension_key_share(val: string, is_client: bool): ParseResul
     len = |val|;
   }
 
-  # TODO - we will likely want to capture ordering of groups
-  #  and a table is random access. Consider changing to a vector
-  local map: table[count] of string;
+  local map: table[count] of string &ordered;
   local group: count;
   local key_exchange_len: count;
   local key_exchange: string;

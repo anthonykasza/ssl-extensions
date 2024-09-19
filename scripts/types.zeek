@@ -57,7 +57,7 @@ export {
   type ParseResult_key_share: record {
     len: count;
     # group keys yield key_exchange values
-    map: table[count] of string &optional;
+    map: table[count] of string &optional &ordered;
   };
 
   type ParseResult_max_fragment_length: record {};

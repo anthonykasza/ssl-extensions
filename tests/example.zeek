@@ -39,7 +39,7 @@ event SSL::EXTENSIONS::ssl_extension_signature_algorithms(c: connection, is_clie
   }
 }
 
-event SSL::EXTENSIONS::ssl_extension_encrypted_client_hello(c: connection, is_client: bool, val: ParseResult_signature_algorithms) {
+event SSL::EXTENSIONS::ssl_extension_encrypted_client_hello(c: connection, is_client: bool, val: ParseResult_encrypted_client_hello) {
   print "encrypted_client_hello: ", val;
 }
 
@@ -76,11 +76,11 @@ event SSL::EXTENSIONS::ssl_extension_key_share_reserved(c: connection, is_client
   }
 }
 
-event SSL::EXTENSIONS::ssl_extension_pre_shared_key(c: connection, is_client: bool, val: ParseResult_signature_algorithms) {
+event SSL::EXTENSIONS::ssl_extension_pre_shared_key(c: connection, is_client: bool, val: ParseResult_pre_shared_key) {
   print "pre_shared_key: ", val;
 }
 
-event SSL::EXTENSIONS::ssl_extension_application_layer_protocol_negotiation(c: connection, is_client: bool, val: ParseResult_signature_algorithms) {
+event SSL::EXTENSIONS::ssl_extension_application_layer_protocol_negotiation(c: connection, is_client: bool, val: ParseResult_application_layer_protocol_negotiation) {
   print "application_layer_protocol_negotiation: ", val;
 }
 

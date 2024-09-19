@@ -1,0 +1,8 @@
+[package]
+description = A proof-of-concept demonstrating scriptland parsing and event routing for all SSL extensions
+tags = tls, ssl, experimental
+script_dir = scripts
+test_command = cd testing && btest -c btest.cfg
+version = main
+depends =
+  zeek >=7.0.0

@@ -307,6 +307,11 @@ function parse_ssl_extension_status_request(val: string): ParseResult_status_req
   return [];
 }
 
+function parse_ssl_extension_delegated_credential(val: string): ParseResult_delegated_credential { return []; }
+function parse_ssl_extension_quic_transport_parameters(val: string): ParseResult_quic_transport_parameters { return []; }
+function parse_ssl_extension_record_size_limit(val: string): ParseResult_record_size_limit { return []; }
+
+
 function parse_ssl_extension_TLMSP(val: string): ParseResult_TLMSP { return []; }
 function parse_ssl_extension_TLMSP_delegate(val: string): ParseResult_TLMSP_delegate { return []; }
 function parse_ssl_extension_TLMSP_proxying(val: string): ParseResult_TLMSP_proxying { return []; }
@@ -320,7 +325,6 @@ function parse_ssl_extension_compress_certificate(val: string): ParseResult_comp
 function parse_ssl_extension_connection_id(val: string): ParseResult_connection_id { return []; }
 function parse_ssl_extension_connection_id_deprecated(val: string): ParseResult_connection_id_deprecated { return []; }
 function parse_ssl_extension_cookie(val: string): ParseResult_cookie { return []; }
-function parse_ssl_extension_delegated_credential(val: string): ParseResult_delegated_credential { return []; }
 function parse_ssl_extension_dnssec_chain(val: string): ParseResult_dnssec_chain { return []; }
 function parse_ssl_extension_early_data(val: string): ParseResult_early_data { return []; }
 function parse_ssl_extension_ech_outer_extensions(val: string): ParseResult_ech_outer_extensions { return []; }
@@ -335,8 +339,6 @@ function parse_ssl_extension_password_salt(val: string): ParseResult_password_sa
 function parse_ssl_extension_post_handshake_auth(val: string): ParseResult_post_handshake_auth { return []; }
 function parse_ssl_extension_pwd_clear(val: string): ParseResult_pwd_clear { return []; }
 function parse_ssl_extension_pwd_protect(val: string): ParseResult_pwd_protect { return []; }
-function parse_ssl_extension_quic_transport_parameters(val: string): ParseResult_quic_transport_parameters { return []; }
-function parse_ssl_extension_record_size_limit(val: string): ParseResult_record_size_limit { return []; }
 function parse_ssl_extension_renegotiation_info(val: string): ParseResult_renegotiation_info { return []; }
 function parse_ssl_extension_rrc(val: string): ParseResult_rrc { return []; }
 function parse_ssl_extension_sequence_number_encryption_algorithms(val: string): ParseResult_sequence_number_encryption_algorithms { return []; }

@@ -5,4 +5,4 @@ script_dir = scripts
 test_command = cd testing && btest -c btest.cfg
 version = main
 depends =
-  zeek >=7.0.0
+  zeek >=6.1.0

@@ -9,7 +9,7 @@ module SSL::EXTENSIONS;
 function parse_ssl_extension_ec_point_formats(val: string): ParseResult_ec_point_formats {
   # 1 byte length
   if (|val| == 0) {
-    return [$len=bytestring_to_count("\x00")];
+    return [];
   }
   local len: count = bytestring_to_count(val[0]);
   val = val[1:];
@@ -22,14 +22,14 @@ function parse_ssl_extension_ec_point_formats(val: string): ParseResult_ec_point
     idx += 1;
   }
 
-  return [$len=len, $formats=formats];
+  return [$formats=formats];
 }
 
 
 function parse_ssl_extension_supported_groups(val: string): ParseResult_supported_groups {
   # 2 byte length
   if (|val| == 0) {
-    return [$len=bytestring_to_count("\x00\x00")];
+    return [];
   }
   local len: count = bytestring_to_count(val[0:2]);
   val = val[2:];
@@ -42,13 +42,13 @@ function parse_ssl_extension_supported_groups(val: string): ParseResult_supporte
     val = val[2:];
   }
 
-  return [$len=len, $supported_groups=supported_groups];
+  return [$supported_groups=supported_groups];
 }
 
 function parse_ssl_extension_session_ticket(val: string): ParseResult_session_ticket {
   # 1 byte length
   if (|val| == 0) {
-    return [$len=bytestring_to_count("\x00")];
+    return [];
   }
   local len: count = bytestring_to_count(val[0]);
   val = val[1:];
@@ -56,13 +56,13 @@ function parse_ssl_extension_session_ticket(val: string): ParseResult_session_ti
   # the rest of the bytes, as a string
   local session_ticket: string = val;
 
-  return [$len=len, $session_ticket=session_ticket];
+  return [$session_ticket=session_ticket];
 }
 
 function parse_ssl_extension_padding(val: string): ParseResult_padding {
   # 2 byte length
   if (|val| == 0) {
-    return [$len=bytestring_to_count("\x00\x00")];
+    return [];
   }
   local len: count = bytestring_to_count(val[0:2]);
   val = val[2:];
@@ -76,13 +76,13 @@ function parse_ssl_extension_padding(val: string): ParseResult_padding {
     }
   }
 
-  return [$len=len, $padding=val];
+  return [$padding=val];
 }
 
 function parse_ssl_extension_signature_algorithms(val: string): ParseResult_signature_algorithms { 
   # 2 byte length
   if (|val| == 0) {
-    return [$len=bytestring_to_count("\x00\x00")];
+    return [];
   }
   local len: count = bytestring_to_count(val[0:2]);
   val = val[2:];
@@ -95,7 +95,7 @@ function parse_ssl_extension_signature_algorithms(val: string): ParseResult_sign
     val = val[2:];
   }
 
-  return [$len=len, $sig_algo_hash_algo=sig_algo_hash_algo];
+  return [$signature_algorithms=sig_algo_hash_algo];
 }
 
 function parse_ssl_extension_encrypted_client_hello(val: string): ParseResult_encrypted_client_hello {
@@ -149,7 +149,7 @@ function parse_ssl_extension_supported_versions(val: string, is_client: bool): P
   if (is_client) {
     # 1 byte length
     if (|val| == 0) {
-      return [$len=bytestring_to_count("\x00")];
+      return [];
     }
     local len: count = bytestring_to_count(val[0]);
     val = val[1:];
@@ -160,7 +160,7 @@ function parse_ssl_extension_supported_versions(val: string, is_client: bool): P
       val = val[2:];
     }
 
-    return [$len=len, $supported_versions=supported_versions];
+    return [$supported_versions=supported_versions];
 
   } else {
     # is_client == F
@@ -171,15 +171,14 @@ function parse_ssl_extension_supported_versions(val: string, is_client: bool): P
       val = val[2:];
     }
 
-    # server usage of this extension should always be length 2, indicating one version which the server selects
-    return [$len=2, $supported_versions=supported_versions];
+    return [$supported_versions=supported_versions];
   }
 }
 
 function parse_ssl_extension_psk_key_exchange_modes(val: string): ParseResult_psk_key_exchange_modes {
   # 1 byte length
   if (|val| == 0) {
-    return [$len=bytestring_to_count("\x00")];
+    return [];
   }
   local len: count = bytestring_to_count(val[0]);
   val = val[1:];
@@ -192,7 +191,7 @@ function parse_ssl_extension_psk_key_exchange_modes(val: string): ParseResult_ps
     idx += 1;
   }
 
-  return [$len=len, $psk_key_exchange_modes=modes];
+  return [$psk_key_exchange_modes=modes];
 }
 
 function parse_ssl_extension_key_share(val: string, is_client: bool): ParseResult_key_share {
@@ -200,7 +199,7 @@ function parse_ssl_extension_key_share(val: string, is_client: bool): ParseResul
   if (is_client) {
     # 2 byte length
     if (|val| == 0) {
-      return [$len=bytestring_to_count("\x00\x00")];
+      return [];
     }
     len = bytestring_to_count(val[0:2]);
     val = val[2:];
@@ -228,18 +227,21 @@ function parse_ssl_extension_key_share(val: string, is_client: bool): ParseResul
     map[group] = key_exchange;
   }
 
-   return [$len=len, $map=map];
+   return [$map=map];
 }
 
 function parse_ssl_extension_pre_shared_key(val: string, is_client: bool): ParseResult_pre_shared_key {
   if (!is_client) {
     # the server's response should always be 2 bytes
-    return [$len=2, $selected_identity=bytestring_to_count(val)];
+    return [
+      $is_client=is_client,
+      $selected_identity=bytestring_to_count(val)
+    ];
   }
 
   # 2 byte length
   if (|val| == 0) {
-    return [$len=bytestring_to_count("\x00\x00")];
+    return [$is_client=is_client];
   }
   local len: count = bytestring_to_count(val[0:2]);
   val = val[2:];
@@ -265,9 +267,11 @@ function parse_ssl_extension_pre_shared_key(val: string, is_client: bool): Parse
   val = val[binders_len:];
 
   # TODO - check to ensure |binders| == |identities| and raise notice/weird
+  # TODO - check for obviously invalid binders in client such as 0x00, this could
+  #        be indicative of an identity enumeration attack by the client
 
   return [
-    $len=len,
+    $is_client=is_client,
     $obfuscated_ticket_age=ota,
     $identities=identities,
     $binders=binders
@@ -277,7 +281,7 @@ function parse_ssl_extension_pre_shared_key(val: string, is_client: bool): Parse
 function parse_ssl_extension_application_layer_protocol_negotiation(val: string): ParseResult_application_layer_protocol_negotiation {
   # 2 byte length
   if (|val| == 0) {
-    return [$len=bytestring_to_count("\x00\x00")];
+    return [];
   }
   local len: count = bytestring_to_count(val[0:2]);
   val = val[2:];
@@ -295,21 +299,119 @@ function parse_ssl_extension_application_layer_protocol_negotiation(val: string)
 
     protocols += proto;
   }
-  return [$len=len, $protocols=protocols];
+  return [$protocols=protocols];
 }
 
 function parse_ssl_extension_grease(val: string, code: count): ParseResult_grease {
   return [$code=code, $content=val];
 }
 
+function parse_ssl_extension_heartbeat(val: string): ParseResult_heartbeat {
+  if (|val| == 0) {
+    return [];
+  }
 
-function parse_ssl_extension_status_request(val: string): ParseResult_status_request {
+  # the rest of the bytes, one at a time
+  local modes: vector of count = vector();
+  local idx: count = 0;
+  for (char in val) {
+    modes += bytestring_to_count(val[idx]);
+    idx += 1;
+  }
+
+  return [$modes=modes];
+}
+
+function parse_ssl_extension_renegotiation_info(val: string): ParseResult_renegotiation_info {
+  # 1 byte length
+  if (|val| == 0) {
+    return [];
+  }
+  local len: count = bytestring_to_count(val[0]);
+  val = val[1:];
+
+  # TODO - find an example to parse
+
   return [];
 }
 
-function parse_ssl_extension_delegated_credential(val: string): ParseResult_delegated_credential { return []; }
+function parse_ssl_extension_server_name(val: string): ParseResult_server_name {
+  # 2 byte length
+  if (|val| == 0) {
+    return [];
+  }
+  local len: count = bytestring_to_count(val[0:2]);
+  val = val[2:];
+
+  local types_: vector of count = vector();
+  local names: vector of string = vector();
+  while (|val| > 0) {
+    # 1 byte type
+    local type_: count = bytestring_to_count(val[0:1]);
+    types_ += type_;
+    val = val[1:];
+
+    # 2 byte length
+    local name_len: count = bytestring_to_count(val[0:2]);
+    val = val[2:];
+
+    # variable length string
+    local name: string = val[0:name_len];
+    names += name;
+    val = val[name_len:];
+  }
+  return [$types_=types_, $names=names];
+}
+
+
+function parse_ssl_extension_status_request(val: string): ParseResult_status_request {
+  if (|val| == 0) {
+    return [];
+  }
+
+  # 1 byte type
+  local type_: count = bytestring_to_count(val[0]);
+  val = val[1:];
+
+  if (type_ == 255) {
+    # TODO - raise notice
+    ;
+  } else if (type_ == 1) {
+    # TODO - https://www.rfc-editor.org/rfc/rfc6066.html#section-8
+    ;
+  } else {
+    # TODO - raise notie
+    ;
+  }
+
+  return [$type_=type_];
+}
+
+# this is the ecaxt same as parse_ssl_extension_signature_algorithms
+function parse_ssl_extension_delegated_credential(val: string): ParseResult_delegated_credential {
+  # 2 byte length
+  if (|val| == 0) {
+    return [];
+  }
+  local len: count = bytestring_to_count(val[0:2]);
+  val = val[2:];
+
+  # the rest of the bytes, two at a time
+  local sig_algos: vector of count = vector();
+  local idx: count = 0;
+  while (|val| > 0) {
+    sig_algos += bytestring_to_count(val[0:2]);
+    val = val[2:];
+  }
+
+  return [$signature_algorithms=sig_algos];
+}
+
 function parse_ssl_extension_quic_transport_parameters(val: string): ParseResult_quic_transport_parameters { return []; }
-function parse_ssl_extension_record_size_limit(val: string): ParseResult_record_size_limit { return []; }
+
+function parse_ssl_extension_record_size_limit(val: string): ParseResult_record_size_limit {
+  return [$record_size_limit=bytestring_to_count(val)];
+}
 
 
 function parse_ssl_extension_TLMSP(val: string): ParseResult_TLMSP { return []; }
@@ -332,19 +434,16 @@ function parse_ssl_extension_encrypt_then_mac(val: string): ParseResult_encrypt_
 function parse_ssl_extension_extended_master_secret(val: string): ParseResult_extended_master_secret { return []; }
 function parse_ssl_extension_external_id_hash(val: string): ParseResult_external_id_hash { return []; }
 function parse_ssl_extension_external_session_id(val: string): ParseResult_external_session_id { return []; }
-function parse_ssl_extension_heartbeat(val: string): ParseResult_heartbeat { return []; }
 function parse_ssl_extension_max_fragment_length(val: string): ParseResult_max_fragment_length { return []; }
 function parse_ssl_extension_oid_filters(val: string): ParseResult_oid_filters { return []; }
 function parse_ssl_extension_password_salt(val: string): ParseResult_password_salt { return []; }
 function parse_ssl_extension_post_handshake_auth(val: string): ParseResult_post_handshake_auth { return []; }
 function parse_ssl_extension_pwd_clear(val: string): ParseResult_pwd_clear { return []; }
 function parse_ssl_extension_pwd_protect(val: string): ParseResult_pwd_protect { return []; }
-function parse_ssl_extension_renegotiation_info(val: string): ParseResult_renegotiation_info { return []; }
 function parse_ssl_extension_rrc(val: string): ParseResult_rrc { return []; }
 function parse_ssl_extension_sequence_number_encryption_algorithms(val: string): ParseResult_sequence_number_encryption_algorithms { return []; }
 function parse_ssl_extension_server_authz(val: string): ParseResult_server_authz { return []; }
 function parse_ssl_extension_server_certificate_type(val: string): ParseResult_server_certificate_type { return []; }
-function parse_ssl_extension_server_name(val: string): ParseResult_server_name { return []; }
 function parse_ssl_extension_signature_algorithms_cert(val: string): ParseResult_signature_algorithms_cert { return []; }
 function parse_ssl_extension_signed_certificate_timestamp(val: string): ParseResult_signed_certificate_timestamp { return []; }
 function parse_ssl_extension_srp(val: string): ParseResult_srp { return []; }

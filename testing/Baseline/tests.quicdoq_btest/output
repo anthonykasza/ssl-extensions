@@ -4,7 +4,7 @@ SSL::EXTENSIONS::ssl_extension_application_layer_protocol_negotiation:  [protoco
 SSL::EXTENSIONS::ssl_extension_supported_versions:  [supported_versions=[772]];
 SSL::EXTENSIONS::ssl_extension_signature_algorithms:  [signature_algorithms=[2052, 1027, 1025, 513]];
 SSL::EXTENSIONS::ssl_extension_supported_groups:  [supported_groups=[23, 29]];
-SSL::EXTENSIONS::ssl_extension_quic_transport_parameters:  [];
+SSL::EXTENSIONS::ssl_extension_quic_transport_parameters:  [params_types=<uninitialized>, params_values=<uninitialized>];
 SSL::EXTENSIONS::ssl_extension_psk_key_exchange_modes:  [psk_key_exchange_modes=[1]];
 SSL::EXTENSIONS::ssl_extension_supported_versions:  [supported_versions=[772]];
 SSL::EXTENSIONS::ssl_extension_key_share:  [map={\x0a\x09[23] = \x04S0\x01\xb25S\x06\x1a]\xa2\xd2R\x1a\xdb'\xc5\x0c\x16\x0f\xc4`4\xa5\x1b\xd4\x98\xa0U\xd9<\xc8fyy\x03\xc4Vn\xebZ-\xcf{ntvV\xad\x0f6\x12\xde\xc1{\xa0\xbb\xbbqOD\x868K\xc4\x0a}];

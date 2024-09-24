@@ -5,9 +5,9 @@ SSL::EXTENSIONS::ssl_extension_signature_algorithms:  [signature_algorithms=[153
 SSL::EXTENSIONS::ssl_extension_supported_groups:  [supported_groups=[25, 24, 23, 21, 256]];
 SSL::EXTENSIONS::ssl_extension_encrypt_then_mac:  [];
 SSL::EXTENSIONS::ssl_extension_supported_versions:  [supported_versions=[65276]];
-SSL::EXTENSIONS::ssl_extension_cookie:  [];
+SSL::EXTENSIONS::ssl_extension_cookie:  [cookie= h\x1e\x0d\xd7vlV?M\x9b\xf4G\xd4*\xaf\xf9\x02\x16\x7fJ\xb5)\x13r\xea\xcc,\x1c,i}3\x13\x01\xbc\x80\xbe\xf9\xeb\xf4w`\x99\xaa>\x8f@\x1f\x0fU\xb7_\x01=\xe8P\xac\x9c>\x0dK\xa4R\xee`\x95];
 SSL::EXTENSIONS::ssl_extension_supported_versions:  [supported_versions=[65276]];
-SSL::EXTENSIONS::ssl_extension_cookie:  [];
+SSL::EXTENSIONS::ssl_extension_cookie:  [cookie= h\x1e\x0d\xd7vlV?M\x9b\xf4G\xd4*\xaf\xf9\x02\x16\x7fJ\xb5)\x13r\xea\xcc,\x1c,i}3\x13\x01\xbc\x80\xbe\xf9\xeb\xf4w`\x99\xaa>\x8f@\x1f\x0fU\xb7_\x01=\xe8P\xac\x9c>\x0dK\xa4R\xee`\x95];
 SSL::EXTENSIONS::ssl_extension_key_share:  [map={\x0a\x09[23] = \x04\xed\xd89Z\x8f\x8d%p{K\xa4>J\x9a?\xae\xe4\xffBH\x96vg\xfbBW\xc4\x07\xc9MP\xca?o\x93\xc0\x1d\x954\x89b\x0c\xe3\x12!\xc5?o\x0f\x13\xd3\x1a\xa5A\x818\xd2\xa0Z\x00\xa9\xb6\xaf?\x0a}];
 SSL::EXTENSIONS::ssl_extension_signature_algorithms:  [signature_algorithms=[1539, 1283, 1027, 515, 2054, 2059, 2053, 2058, 2052, 2057, 1537, 1281, 1025, 769, 513]];
 SSL::EXTENSIONS::ssl_extension_supported_groups:  [supported_groups=[25, 24, 23, 21, 256]];

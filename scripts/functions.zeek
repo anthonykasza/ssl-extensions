@@ -407,12 +407,122 @@ function parse_ssl_extension_delegated_credential(val: string): ParseResult_dele
   return [$signature_algorithms=sig_algos];
 }
 
-function parse_ssl_extension_quic_transport_parameters(val: string): ParseResult_quic_transport_parameters { return []; }
+function parse_ssl_extension_quic_transport_parameters(val: string): ParseResult_quic_transport_parameters {
+
+  return [];
+
+  # TODO - each param_type field has unique length field length
+  #        meaning parsing this extension will require a 
+  #        switch/case to route param_type values to different
+  #        parsing logic for each different type
+  #        https://datatracker.ietf.org/doc/html/draft-ietf-quic-transport-34#name-transport-parameter-definit
+  local params_types: vector of count = vector();
+  local params_values: vector of count = vector();
+  local idx: count = 0;
+}
 
 function parse_ssl_extension_record_size_limit(val: string): ParseResult_record_size_limit {
   return [$record_size_limit=bytestring_to_count(val)];
 }
 
+function parse_ssl_extension_connection_id(val: string): ParseResult_connection_id {
+  # 1 byte length
+  if (|val| == 0) {
+    return [];
+  }
+  local len: count = bytestring_to_count(val[0]);
+  val = val[1:];
+
+  return [$connection_id=val];
+}
+function parse_ssl_extension_cookie(val: string): ParseResult_cookie { 
+  # 2 byte length
+  if (|val| == 0) {
+    return [];
+  }
+  local len: count = bytestring_to_count(val[0:2]);
+  val = val[2:];
+
+  return [$cookie=val];
+}
+
+function parse_ssl_extension_compress_certificate(val: string): ParseResult_compress_certificate {
+  # 1 byte length
+  if (|val| == 0) {
+    return [];
+  }
+  local len: count = bytestring_to_count(val[0]);
+  val = val[1:];
+
+  # the rest of the bytes, two at a time
+  local algorithms: vector of count = vector();
+  local idx: count = 0;
+  while (|val| > 0) {
+    algorithms += bytestring_to_count(val[0:2]);
+    val = val[2:];
+  }
+
+  return [$algorithms=algorithms];
+}
+
+function parse_ssl_extension_token_binding(val: string): ParseResult_token_binding {
+  # 1 byte major
+  if (|val| == 0) {
+    return [];
+  }
+  local proto_major: count = bytestring_to_count(val[0]);
+  val = val[1:];
+
+  # 1 byte minor
+  if (|val| == 0) {
+    return [];
+  }
+  local proto_minor: count = bytestring_to_count(val[0]);
+  val = val[1:];
+
+  # 1 byte length
+  if (|val| == 0) {
+    return [];
+  }
+  local key_params_len: count = bytestring_to_count(val[0]);
+  val = val[1:];
+
+  # the rest of the bytes, one at a time
+  local params: vector of count = vector();
+  local idx: count = 0;
+  for (char in val) {
+    params += bytestring_to_count(val[idx]);
+    idx += 1;
+  }
+
+  return [
+    $proto_major=proto_major,
+    $proto_minor=proto_minor,
+    $parameters=params
+  ];
+}
+
+
+function parse_ssl_extension_use_srtp(val: string): ParseResult_use_srtp {
+  # https://datatracker.ietf.org/doc/html/rfc5764#section-4.1.1
+
+  # 2 byte length
+  if (|val| == 0) {
+    return [];
+  }
+  local profiles_len: count = bytestring_to_count(val[0:2]);
+  val = val[2:];
+
+  # variable length count
+  local profile: count = bytestring_to_count(val[0:profiles_len]);
+  val = val[profiles_len:];
+
+  # 1 byte mki length
+  local mki_len: count = bytestring_to_count(val[0]);
+  val = val[1:];
+
+  return [$profile=profile, $mki_len=mki_len];
+}
 
 function parse_ssl_extension_TLMSP(val: string): ParseResult_TLMSP { return []; }
 function parse_ssl_extension_TLMSP_delegate(val: string): ParseResult_TLMSP_delegate { return []; }
@@ -423,10 +533,7 @@ function parse_ssl_extension_certificate_authorities(val: string): ParseResult_c
 function parse_ssl_extension_client_authz(val: string): ParseResult_client_authz { return []; }
 function parse_ssl_extension_client_certificate_type(val: string): ParseResult_client_certificate_type { return []; }
 function parse_ssl_extension_client_certificate_url(val: string): ParseResult_client_certificate_url { return []; }
-function parse_ssl_extension_compress_certificate(val: string): ParseResult_compress_certificate { return []; }
-function parse_ssl_extension_connection_id(val: string): ParseResult_connection_id { return []; }
 function parse_ssl_extension_connection_id_deprecated(val: string): ParseResult_connection_id_deprecated { return []; }
-function parse_ssl_extension_cookie(val: string): ParseResult_cookie { return []; }
 function parse_ssl_extension_dnssec_chain(val: string): ParseResult_dnssec_chain { return []; }
 function parse_ssl_extension_early_data(val: string): ParseResult_early_data { return []; }
 function parse_ssl_extension_ech_outer_extensions(val: string): ParseResult_ech_outer_extensions { return []; }
@@ -453,9 +560,7 @@ function parse_ssl_extension_ticket_pinning(val: string): ParseResult_ticket_pin
 function parse_ssl_extension_ticket_request(val: string): ParseResult_ticket_request { return []; }
 function parse_ssl_extension_tls_cert_with_extern_psk(val: string): ParseResult_tls_cert_with_extern_psk { return []; }
 function parse_ssl_extension_tls_lts(val: string): ParseResult_tls_lts { return []; }
-function parse_ssl_extension_token_binding(val: string): ParseResult_token_binding { return []; }
 function parse_ssl_extension_transparency_info(val: string): ParseResult_transparency_info { return []; }
 function parse_ssl_extension_truncated_hmac(val: string): ParseResult_truncated_hmac { return []; }
 function parse_ssl_extension_trusted_ca_keys(val: string): ParseResult_trusted_ca_keys { return []; }
-function parse_ssl_extension_use_srtp(val: string): ParseResult_use_srtp { return []; }
 function parse_ssl_extension_user_mapping(val: string): ParseResult_user_mapping { return []; }

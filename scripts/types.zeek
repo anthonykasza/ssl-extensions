@@ -15,10 +15,20 @@ export {
   type ParseResult_client_authz: record {};
   type ParseResult_client_certificate_type: record {};
   type ParseResult_client_certificate_url: record {};
-  type ParseResult_compress_certificate: record {};
-  type ParseResult_connection_id: record {};
+
+  type ParseResult_compress_certificate: record {
+    algorithms: vector of count &optional;
+  };
+
+  type ParseResult_connection_id: record {
+    connection_id: string &optional;
+  };
+
   type ParseResult_connection_id_deprecated: record {};
-  type ParseResult_cookie: record {};
+
+  type ParseResult_cookie: record {
+    cookie: string &optional;
+  };
 
   type ParseResult_delegated_credential: record {
     signature_algorithms: vector of count &optional;
@@ -89,7 +99,11 @@ export {
 
   type ParseResult_pwd_clear: record {};
   type ParseResult_pwd_protect: record {};
-  type ParseResult_quic_transport_parameters: record {};
+
+  type ParseResult_quic_transport_parameters: record {
+    params_types: vector of count &optional;
+    params_values: vector of count &optional;
+  };
 
   type ParseResult_record_size_limit: record {
     record_size_limit: count &optional;
@@ -140,10 +154,21 @@ export {
   type ParseResult_ticket_request: record {};
   type ParseResult_tls_cert_with_extern_psk: record {};
   type ParseResult_tls_lts: record {};
-  type ParseResult_token_binding: record {};
+
+  type ParseResult_token_binding: record {
+    proto_major: count &optional;
+    proto_minor: count &optional;
+    parameters: vector of count &optional;
+  };
+
   type ParseResult_transparency_info: record {};
   type ParseResult_truncated_hmac: record {};
   type ParseResult_trusted_ca_keys: record {};
-  type ParseResult_use_srtp: record {};
+
+  type ParseResult_use_srtp: record {
+    profile: count &optional;
+    mki_len: count &optional;
+  };
+
   type ParseResult_user_mapping: record {};
 }

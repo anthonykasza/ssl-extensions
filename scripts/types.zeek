@@ -1,3 +1,5 @@
+# Types returned from parsing functions and handled in events
+
 module SSL::EXTENSIONS;
 
 export {

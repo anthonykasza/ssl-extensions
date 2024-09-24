@@ -1,10 +1,7 @@
 # The functions which parse ssl extensions as strings
-# Many of these share functionality and they likely could be reduced
-#  For example, supported_groups and supported_versions is basically
-#  the same function
-
 
 module SSL::EXTENSIONS;
+
 
 function parse_ssl_extension_ec_point_formats(val: string): ParseResult_ec_point_formats {
   # 1 byte length

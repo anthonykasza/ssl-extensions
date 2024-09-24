@@ -18,7 +18,7 @@ export {
   global ssl_extension_delegated_credential: event(c: connection, is_client: bool, result: any);
   global ssl_extension_dnssec_chain: event(c: connection, is_client: bool, result: any);
   global ssl_extension_early_data: event(c: connection, is_client: bool, result: any);
-  global ssl_extension_ec_point_formats: event(c: connection, is_client: bool, result: ParseResult_ec_point_formats);
+  global ssl_extension_ec_point_formats: event(c: connection, is_client: bool, result: any);
   global ssl_extension_ech_outer_extensions: event(c: connection, is_client: bool, result: any);
   global ssl_extension_encrypt_then_mac: event(c: connection, is_client: bool, result: any);
   global ssl_extension_encrypted_client_hello: event(c: connection, is_client: bool, result: any);

@@ -10,7 +10,7 @@ event zeek_init()
 
 event new_event(name: string, params: call_argument_vector)
 	{
-	if ( !starts_with(name, "SSL::EXTENSIONS::ssl_extension_") )
+	if ( !starts_with(name, "SSL::EXTENSIONS::") )
 		{
 		return;
 		}

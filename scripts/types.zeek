@@ -3,9 +3,9 @@
 module SSL::EXTENSIONS;
 
 export {
-  type ParseResult_TLMSP: record {};
-  type ParseResult_TLMSP_delegate: record {};
-  type ParseResult_TLMSP_proxying: record {};
+  type ParseResult_tlmsp: record {};
+  type ParseResult_tlmsp_delegate: record {};
+  type ParseResult_tlmsp_proxying: record {};
 
   type ParseResult_application_layer_protocol_negotiation: record {
     protocols: vector of string &optional;

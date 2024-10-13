@@ -408,11 +408,28 @@ function parse_ssl_extension_quic_transport_parameters(val: string): ParseResult
 
   return [];
 
-  # TODO - each param_type field has unique length field length
-  #        meaning parsing this extension will require a 
-  #        switch/case to route param_type values to different
-  #        parsing logic for each different type
-  #        https://datatracker.ietf.org/doc/html/draft-ietf-quic-transport-34#name-transport-parameter-definit
+  # TODO 
+
+  local parameter_types: table[count] of string = {
+    [0x00] = "original_destination_connection_id",
+    [0x01] = "max_idle_timeout",
+    [0x02] = "stateless_reset_token",
+    [0x03] = "max_udp_payload_size",
+    [0x04] = "initial_max_data",
+    [0x05] = "initial_max_stream_data_bidi_local",
+    [0x06] = "initial_max_stream_data_bidi_remote",
+    [0x07] = "initial_max_stream_data_uni",
+    [0x08] = "initial_max_streams_bidi",
+    [0x09] = "initial_max_streams_uni",
+    [0x0a] = "ack_delay_exponent",
+    [0x0b] = "max_ack_delay",
+    [0x0c] = "disable_active_migration",
+    [0x0d] = "preferred_address",
+    [0x0e] = "active_connection_id_limit",
+    [0x0f] = "initial_source_connection_id",
+    [0x10] = "retry_source_connection_id"
+  } &default="GREASE";
+  
   local params_types: vector of count = vector();
   local params_values: vector of count = vector();
   local idx: count = 0;

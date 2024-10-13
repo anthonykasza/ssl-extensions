@@ -1,7 +1,7 @@
 # @TEST-EXEC: zeek -C -r /Traces/tls/webrtc-stun.pcap $PACKAGE %INPUT >> output 2>&1
 # @TEST-EXEC: btest-diff output
 
-@load ../../tests/event-list
+
 
 event zeek_init()
 	{
@@ -10,7 +10,7 @@ event zeek_init()
 
 event new_event(name: string, params: call_argument_vector)
 	{
-	if ( name !in SSL::EXTENSIONS::TESTS::event_list )
+	if ( !starts_with(name, "SSL::EXTENSIONS::ssl_extension_") )
 		{
 		return;
 		}

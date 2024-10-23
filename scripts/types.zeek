@@ -88,7 +88,6 @@ export {
   # This demonstrates why it's not a clean solution to use a single
   #  type for parsing of extensions from both the client and the server
   type ParseResult_pre_shared_key: record {
-    is_client: bool;
     obfuscated_ticket_age: count &optional; #client 
     identities: string &optional; #client
     binders: string &optional; #client

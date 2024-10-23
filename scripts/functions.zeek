@@ -4,10 +4,10 @@ module SSL::EXTENSIONS;
 
 
 function parse_ec_point_formats(val: string): ParseResult_ec_point_formats {
+  # length guard
+  if (|val| == 0) { return []; }
+
   # 1 byte length
-  if (|val| == 0) {
-    return [];
-  }
   local len: count = bytestring_to_count(val[0]);
   val = val[1:];
 
@@ -24,10 +24,10 @@ function parse_ec_point_formats(val: string): ParseResult_ec_point_formats {
 
 
 function parse_supported_groups(val: string): ParseResult_supported_groups {
+  # length guard
+  if (|val| == 0) { return []; }
+
   # 2 byte length
-  if (|val| == 0) {
-    return [];
-  }
   local len: count = bytestring_to_count(val[0:2]);
   val = val[2:];
 
@@ -43,10 +43,10 @@ function parse_supported_groups(val: string): ParseResult_supported_groups {
 }
 
 function parse_session_ticket(val: string): ParseResult_session_ticket {
+  # length guard
+  if (|val| == 0) { return []; }
+
   # 1 byte length
-  if (|val| == 0) {
-    return [];
-  }
   local len: count = bytestring_to_count(val[0]);
   val = val[1:];
 
@@ -57,10 +57,10 @@ function parse_session_ticket(val: string): ParseResult_session_ticket {
 }
 
 function parse_padding(val: string): ParseResult_padding {
+  # length guard
+  if (|val| == 0) { return []; }
+
   # 2 byte length
-  if (|val| == 0) {
-    return [];
-  }
   local len: count = bytestring_to_count(val[0:2]);
   val = val[2:];
 
@@ -77,10 +77,10 @@ function parse_padding(val: string): ParseResult_padding {
 }
 
 function parse_signature_algorithms(val: string): ParseResult_signature_algorithms { 
+  # length guard
+  if (|val| == 0) { return []; }
+
   # 2 byte length
-  if (|val| == 0) {
-    return [];
-  }
   local len: count = bytestring_to_count(val[0:2]);
   val = val[2:];
 
@@ -139,15 +139,19 @@ function parse_encrypted_client_hello(val: string): ParseResult_encrypted_client
   ];
 }
 
+function parse_ech_outer_extensions(val: string): ParseResult_ech_outer_extensions {
+  return [];
+}
+
 function parse_supported_versions(val: string, is_client: bool): ParseResult_supported_versions {
   local supported_versions: vector of count = vector();
   local idx: count = 0;
 
   if (is_client) {
+    # length guard
+    if (|val| == 0) { return []; }
+
     # 1 byte length
-    if (|val| == 0) {
-      return [];
-    }
     local len: count = bytestring_to_count(val[0]);
     val = val[1:];
 
@@ -173,10 +177,10 @@ function parse_supported_versions(val: string, is_client: bool): ParseResult_sup
 }
 
 function parse_psk_key_exchange_modes(val: string): ParseResult_psk_key_exchange_modes {
+  # length guard
+  if (|val| == 0) { return []; }
+
   # 1 byte length
-  if (|val| == 0) {
-    return [];
-  }
   local len: count = bytestring_to_count(val[0]);
   val = val[1:];
 
@@ -194,12 +198,13 @@ function parse_psk_key_exchange_modes(val: string): ParseResult_psk_key_exchange
 function parse_key_share(val: string, is_client: bool): ParseResult_key_share {
   local len: count;
   if (is_client) {
+    # length guard
+    if (|val| == 0) { return []; }
+
     # 2 byte length
-    if (|val| == 0) {
-      return [];
-    }
     len = bytestring_to_count(val[0:2]);
     val = val[2:];
+
   } else {
     len = |val|;
   }
@@ -229,17 +234,17 @@ function parse_key_share(val: string, is_client: bool): ParseResult_key_share {
 
 function parse_pre_shared_key(val: string, is_client: bool): ParseResult_pre_shared_key {
   if (!is_client) {
-    # the server's response should always be 2 bytes
+    # TODO - add a length guard check
+    #        the server's response should always be 2 bytes
     return [
-      $is_client=is_client,
       $selected_identity=bytestring_to_count(val)
     ];
   }
 
+  # length guard
+  if (|val| == 0) { return []; }
+
   # 2 byte length
-  if (|val| == 0) {
-    return [$is_client=is_client];
-  }
   local len: count = bytestring_to_count(val[0:2]);
   val = val[2:];
 
@@ -268,7 +273,6 @@ function parse_pre_shared_key(val: string, is_client: bool): ParseResult_pre_sha
   #        be indicative of an identity enumeration attack by the client
 
   return [
-    $is_client=is_client,
     $obfuscated_ticket_age=ota,
     $identities=identities,
     $binders=binders
@@ -276,10 +280,10 @@ function parse_pre_shared_key(val: string, is_client: bool): ParseResult_pre_sha
 }
 
 function parse_application_layer_protocol_negotiation(val: string): ParseResult_application_layer_protocol_negotiation {
+  # length guard
+  if (|val| == 0) { return []; }
+
   # 2 byte length
-  if (|val| == 0) {
-    return [];
-  }
   local len: count = bytestring_to_count(val[0:2]);
   val = val[2:];
 
@@ -304,9 +308,8 @@ function parse_grease(val: string, code: count): ParseResult_grease {
 }
 
 function parse_heartbeat(val: string): ParseResult_heartbeat {
-  if (|val| == 0) {
-    return [];
-  }
+  # length guard
+  if (|val| == 0) { return []; }
 
   # the rest of the bytes, one at a time
   local modes: vector of count = vector();
@@ -320,10 +323,10 @@ function parse_heartbeat(val: string): ParseResult_heartbeat {
 }
 
 function parse_renegotiation_info(val: string): ParseResult_renegotiation_info {
+  # length guard
+  if (|val| == 0) { return []; }
+
   # 1 byte length
-  if (|val| == 0) {
-    return [];
-  }
   local len: count = bytestring_to_count(val[0]);
   val = val[1:];
 
@@ -333,10 +336,10 @@ function parse_renegotiation_info(val: string): ParseResult_renegotiation_info {
 }
 
 function parse_server_name(val: string): ParseResult_server_name {
+  # length guard
+  if (|val| == 0) { return []; }
+
   # 2 byte length
-  if (|val| == 0) {
-    return [];
-  }
   local len: count = bytestring_to_count(val[0:2]);
   val = val[2:];
 
@@ -362,9 +365,8 @@ function parse_server_name(val: string): ParseResult_server_name {
 
 
 function parse_status_request(val: string): ParseResult_status_request {
-  if (|val| == 0) {
-    return [];
-  }
+  # length guard
+  if (|val| == 0) { return []; }
 
   # 1 byte type
   local type_: count = bytestring_to_count(val[0]);
@@ -384,12 +386,11 @@ function parse_status_request(val: string): ParseResult_status_request {
   return [$type_=type_];
 }
 
-# this is the ecaxt same as parse_signature_algorithms
 function parse_delegated_credential(val: string): ParseResult_delegated_credential {
+  # length guard
+  if (|val| == 0) { return []; }
+
   # 2 byte length
-  if (|val| == 0) {
-    return [];
-  }
   local len: count = bytestring_to_count(val[0:2]);
   val = val[2:];
 
@@ -440,20 +441,20 @@ function parse_record_size_limit(val: string): ParseResult_record_size_limit {
 }
 
 function parse_connection_id(val: string): ParseResult_connection_id {
+  # length guard
+  if (|val| == 0) { return []; }
+
   # 1 byte length
-  if (|val| == 0) {
-    return [];
-  }
   local len: count = bytestring_to_count(val[0]);
   val = val[1:];
 
   return [$connection_id=val];
 }
 function parse_cookie(val: string): ParseResult_cookie { 
+  # length guard
+  if (|val| == 0) { return []; }
+
   # 2 byte length
-  if (|val| == 0) {
-    return [];
-  }
   local len: count = bytestring_to_count(val[0:2]);
   val = val[2:];
 
@@ -461,10 +462,10 @@ function parse_cookie(val: string): ParseResult_cookie {
 }
 
 function parse_compress_certificate(val: string): ParseResult_compress_certificate {
+  # length guard
+  if (|val| == 0) { return []; }
+
   # 1 byte length
-  if (|val| == 0) {
-    return [];
-  }
   local len: count = bytestring_to_count(val[0]);
   val = val[1:];
 
@@ -480,24 +481,18 @@ function parse_compress_certificate(val: string): ParseResult_compress_certifica
 }
 
 function parse_token_binding(val: string): ParseResult_token_binding {
+  # length guard
+  if (|val| == 0) { return []; }
+
   # 1 byte major
-  if (|val| == 0) {
-    return [];
-  }
   local proto_major: count = bytestring_to_count(val[0]);
   val = val[1:];
 
   # 1 byte minor
-  if (|val| == 0) {
-    return [];
-  }
   local proto_minor: count = bytestring_to_count(val[0]);
   val = val[1:];
 
   # 1 byte length
-  if (|val| == 0) {
-    return [];
-  }
   local key_params_len: count = bytestring_to_count(val[0]);
   val = val[1:];
 
@@ -520,10 +515,10 @@ function parse_token_binding(val: string): ParseResult_token_binding {
 function parse_use_srtp(val: string): ParseResult_use_srtp {
   # https://datatracker.ietf.org/doc/html/rfc5764#section-4.1.1
 
+  # length guard
+  if (|val| == 0) { return []; }
+
   # 2 byte length
-  if (|val| == 0) {
-    return [];
-  }
   local profiles_len: count = bytestring_to_count(val[0:2]);
   val = val[2:];
 
@@ -550,7 +545,6 @@ function parse_client_certificate_url(val: string): ParseResult_client_certifica
 function parse_connection_id_deprecated(val: string): ParseResult_connection_id_deprecated { return []; }
 function parse_dnssec_chain(val: string): ParseResult_dnssec_chain { return []; }
 function parse_early_data(val: string): ParseResult_early_data { return []; }
-function parse_ech_outer_extensions(val: string): ParseResult_ech_outer_extensions { return []; }
 function parse_encrypt_then_mac(val: string): ParseResult_encrypt_then_mac { return []; }
 function parse_extended_master_secret(val: string): ParseResult_extended_master_secret { return []; }
 function parse_external_id_hash(val: string): ParseResult_external_id_hash { return []; }

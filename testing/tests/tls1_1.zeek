@@ -14,6 +14,6 @@ event new_event(name: string, params: call_argument_vector)
 		{
 		return;
 		}
-	# c: connection, is_cleint: bool, val: any
+	# c: connection, is_client: bool, val: any
 	print fmt("%s:  %s;", name, params[2]$value);
 	}
